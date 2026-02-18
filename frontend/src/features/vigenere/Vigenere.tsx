@@ -3,11 +3,28 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 import {useState} from "react";
+import {axiosAPI} from "../../axiosAPI.ts";
 
 const Vigenere = () => {
     const [decoded, setDecoded] = useState('');
     const [password, setPassword] = useState('');
     const [encoded, setEncoded] = useState('');
+
+    const vigenereCipher = async (cipherType: "encode" | "decode") => {
+        try {
+            if (cipherType === "encode") {
+                const vigenereResponse = await axiosAPI.post("encode", {message: encoded, password: password});
+                const vigenereText = vigenereResponse.data;
+                setDecoded(vigenereText.encoded);
+            } else if (cipherType === "decode") {
+                const vigenereResponse = await axiosAPI.post("decode", {message: decoded, password: password});
+                const vigenereText = vigenereResponse.data;
+                setEncoded(vigenereText.decoded);
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     return (
         <Box sx={{maxWidth: '50%', p: 4}}>
@@ -31,10 +48,10 @@ const Vigenere = () => {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <Stack>
-                            <IconButton disabled={!(password.trim().length > 0)}>
+                            <IconButton disabled={!(password.trim().length > 0)} onClick={() => vigenereCipher("decode")}>
                                 <ArrowDownwardIcon/>
                             </IconButton>
-                            <IconButton disabled={!(password.trim().length > 0)}>
+                            <IconButton disabled={!(password.trim().length > 0)} onClick={() => vigenereCipher("encode")}>
                                 <ArrowUpwardIcon/>
                             </IconButton>
                         </Stack>
