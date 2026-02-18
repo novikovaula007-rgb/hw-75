@@ -4,6 +4,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 import {useState} from "react";
 import {axiosAPI} from "../../axiosAPI.ts";
+import {toast} from "react-toastify";
 
 const Vigenere = () => {
     const [decoded, setDecoded] = useState('');
@@ -23,6 +24,7 @@ const Vigenere = () => {
             }
         } catch (e) {
             console.log(e)
+            toast.error('You need to fill required fields')
         }
     }
 
